@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Address & Payment</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
+        .container { max-width: 600px; margin: 20px auto; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        input[type="text"], input[type="tel"], textarea { width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .radio-group { border: 1px solid #ccc; border-radius: 4px; padding: 10px; margin-bottom: 10px; }
+        .total-box { display: flex; justify-content: space-between; font-size: 1.5em; font-weight: bold; margin-top: 20px; padding-top: 10px; border-top: 2px solid #a0522d; }
+        button { background-color: #a0522d; color: white; padding: 15px; font-size: 1.1em; border: none; border-radius: 5px; width: 100%; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2 style="text-align: center; color: #a0522d;">Checkout</h2>
+        <div style="display: flex; gap: 15px; padding: 10px; align-items: center; margin-bottom: 20px;">
+            <img src="book_cover.jpg" alt="Cover" style="width: 60px; height: 90px;">
+            <div>
+                <p id="bookTitleDisplay" style="margin: 0; font-weight: bold;">Loading...</p>
+                <p id="bookPriceDisplay" style="margin: 0; font-size: 0.9em; color: #333;">Loading...</p>
+            </div>
+        </div>
+
+        <form id="orderForm" onsubmit="handleFormSubmit(event)">
+
+            <label for="name" style="font-weight: bold;">Full Name:</label>
+            <input type="text" name="Customer_Name" placeholder="Enter your name" required>
+
+            <div style="display: flex; gap: 15px;">
+                <div style="flex: 1;">
+                    <label for="phone" style="font-weight: bold;">Phone Number:</label>
+                    <input type="tel" name="Phone_Number" placeholder="10-digit mobile" required>
+                </div>
+                <div style="flex: 1;">
+                    <label for="pincode" style="font-weight: bold;">Pincode:</label>
+                    <input type="text" name="Pincode" placeholder="6-digit pin" required>
+                </div>
+            </div>
+            
+            <label for="address" style="font-weight: bold;">Delivery Address:</label>
+            <textarea name="Shipping_Address" placeholder="House No, Street, Area..." required rows="3"></textarea>
+
+            <label style="font-weight: bold; margin-top: 10px; display: block;">Delivery Method:</label>
+            <div class="radio-group">
+                <label><input type="radio" name="Delivery_Method" value="Normal Post (₹40)" checked> Normal Post (5-7 Days) • ₹40</label><br>
+                <label><input type="radio" name="Delivery_Method" value="Speed Post (₹60)"> Speed Post (2-3 Days) • ₹60</label>
+            </div>
+            
+            <label style="font-weight: bold; margin-top: 10px; display: block;">Support the Author (Optional):</label>
+            <div class="radio-group" style="display: flex; justify-content: space-around;">
+                <label><input type="radio" name="Support_Amount" value="None" checked> None</label>
+                <label><input type="radio" name="Support_Amount" value="50"> ₹50</label>
+                <label><input type="radio" name="Support_Amount" value="100"> ₹100</label>
+            </div>
+
+            <input type="hidden" name="Final_Total" id="finalTotalInput" value="0.00"> 
+
+            <div class="total-box">
+                <span>Total to Pay</span>
+                <span id="totalDisplay" style="color: #a0522d;">₹0</span>
+            </div>
+            
+            <button type="submit" style="margin-top: 20px;">
+                Proceed to Payment (₹0)
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // 🚨 CRITICAL: REPLACE THESE VALUES 🚨
+        const GOOGLE_SCRIPT_URL = "**PASTE YOUR UNIQUE APPS SCRIPT URL HERE**"; 
+        const YOUR_UPI_ID = "**YourUPI@bank**"; 
+        const THANK_YOU_URL = "https://floorplancreatornik.github.io/AuthorDirect_v2/thankyou.html";
+
+        // Global variables to store book data from URL
+        let BOOK_BASE_PRICE = 0.00; 
+        let BOOK_TITLE = '';
+
+        const DELIVERY_NORMAL = 40.00;
+        const DELIVERY_SPEED = 60.00;
+
+
+        // Function to read URL parameters and initialize the page
+        function initializeCheckout() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Get data passed from the detail page URL
+            const title = urlParams.get('title') || 'Default Book';
+            const price = parseFloat(urlParams.get('price')) || 399.00; // Default to Book 1 price if missing
+
+            BOOK_TITLE = decodeURIComponent(title);
+            BOOK_BASE_PRICE = price;
+
+            // Update the display fields in HTML
+            document.getElementById('bookTitleDisplay').textContent = BOOK_TITLE;
+            document.getElementById('bookPriceDisplay').textContent = '₹' + BOOK_BASE_PRICE.toFixed(0);
+
+            // Add a hidden input field that identifies the book being ordered for the Google Sheet
+            document.getElementById('orderForm').insertAdjacentHTML('beforeend', `<input type="hidden" name="Book_Title" value="${BOOK_TITLE}">`);
+
+            calculateTotal();
+        }
+
+
+        // Function to calculate the total dynamically
+        function calculateTotal() {
+            let total = BOOK_BASE_PRICE;
+            
+            // 1. Delivery
+            const deliveryOption = document.querySelector('input[name="Delivery_Method"]:checked').value;
+            if (deliveryOption.includes("Speed Post")) {
+                total += DELIVERY_SPEED;
+            } else {
+                total += DELIVERY_NORMAL;
+            }
+
+            // 2. Author Support
+            const supportOption = document.querySelector('input[name="Support_Amount"]:checked').value;
+            if (supportOption === "50") {
+                total += 50.00;
+            } else if (supportOption === "100") {
+                total += 100.00;
+            }
+            
+            // Update display and hidden input
+            document.getElementById('totalDisplay').textContent = '₹' + total.toFixed(0);
+            document.querySelector('button[type="submit"]').textContent = 'Proceed to Payment (₹' + total.toFixed(0) + ')';
+            document.getElementById('finalTotalInput').value = total.toFixed(2);
+        }
+
+        // Add event listeners for dynamic calculation
+        document.querySelectorAll('input[name="Delivery_Method"]').forEach(radio => {
+            radio.addEventListener('change', calculateTotal);
+        });
+        document.querySelectorAll('input[name="Support_Amount"]').forEach(radio => {
+            radio.addEventListener('change', calculateTotal);
+        });
+        
+        // Initial setup on load
+        document.addEventListener('DOMContentLoaded', initializeCheckout);
+
+
+        function handleFormSubmit(event) {
+            event.preventDefault(); 
+
+            const form = document.getElementById('orderForm');
+            
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            calculateTotal();
+            const finalTotal = document.getElementById('finalTotalInput').value;
+
+            // 1. Submit data to Google Sheets (Async operation)
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                body: new FormData(form),
+                mode: 'no-cors' 
+            })
+            .then(() => {
+                console.log('Order data submitted to Google Sheets.');
+                
+                // 2. Redirect immediately to the UPI payment app
+                const upiLink = `upi://pay?pa=${YOUR_UPI_ID}&pn=AuthorDirect&mc=0000&tid=B003&tr=B003&am=${finalTotal}&cu=INR&url=${THANK_YOU_URL}`;
+                window.location.href = upiLink;
+            })
+            .catch(error => {
+                // Fallback: If submission fails (e.g., poor connection), still proceed to payment.
+                alert('Connection issue. Proceeding to payment. Your address submission may be delayed.');
+                console.error('Submission error:', error);
+                
+                // Still try to redirect to payment
+                const upiLink = `upi://pay?pa=${YOUR_UPI_ID}&pn=AuthorDirect&mc=0000&tid=B003&tr=B003&am=${finalTotal}&cu=INR&url=${THANK_YOU_URL}`;
+                window.location.href = upiLink;
+            });
+        }
+    </script>
+</body>
+</html>

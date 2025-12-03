@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>**YOUR BOOK TITLE** - Detail</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; padding-bottom: 70px; background-color: #f4f4f4; color: #333; }
+        .container { padding: 20px; }
+        .header { padding: 20px 20px 0 20px; font-size: 1.5em; color: #a0522d; }
+        .book-details { text-align: center; margin-bottom: 25px; }
+        .book-details img { width: 150px; height: auto; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .price-info { display: flex; justify-content: center; gap: 10px; margin: 15px 0; }
+        .tag { background-color: #e0e0e0; padding: 4px 10px; border-radius: 15px; font-size: 0.9em; }
+        .button-group a { display: block; text-align: center; padding: 12px 0; margin-bottom: 10px; border-radius: 6px; font-weight: bold; text-decoration: none; }
+        .order-button { background-color: #a0522d; color: white; border: none; }
+        .preview-button { background-color: white; color: #a0522d; border: 1px solid #a0522d; }
+        .synopsis { margin-top: 30px; }
+        .icon-feature { display: flex; justify-content: space-around; padding: 20px 0; text-align: center; font-size: 0.9em; border-top: 1px solid #eee; }
+        /* Native-style bottom navigation bar */
+        .navbar { position: fixed; bottom: 0; width: 100%; background-color: white; box-shadow: 0 -2px 5px rgba(0,0,0,0.1); display: flex; justify-content: space-around; padding: 10px 0; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7em; color: #666; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" style="text-decoration: none; color: #666; font-size: 0.7em;">&larr; Back to Books</a>
+    </header>
+
+    <div class="container">
+        <div class="book-details">
+            <img src="book_cover.jpg" alt="Your Book Cover" style="width: 150px; height: auto; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+            <h1 style="font-size: 1.8em; margin-bottom: 5px;">**YOUR BOOK TITLE**</h1>
+            <p style="margin: 0; color: #666;">by **YOUR AUTHOR NAME**</p>
+            <h2 style="color: #a0522d; font-size: 1.6em; margin: 10px 0;">**₹399**</h2>
+            <div class="price-info">
+                <span class="tag">**YOUR LANGUAGE**</span>
+                <span class="tag">**PAGE COUNT** Pages</span>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <a href="checkout.html?title=**YOUR%20BOOK%20TITLE**&price=399" class="order-button">
+                📦 Order Paperback
+            </a>
+            <a href="preview.html" class="preview-button">
+                📖 Read Preview
+            </a>
+        </div>
+
+        <div class="synopsis">
+            <h3 style="color: #a0522d;">Synopsis</h3>
+            <p style="line-height: 1.6;">**PASTE YOUR BOOK SYNOPSIS HERE**</p>
+        </div>
+
+        <div class="icon-feature">
+            <div>
+                <span style="font-size: 1.5em;">✒️</span>
+                <p style="margin: 5px 0 0;">Direct from Author</p>
+            </div>
+            <div>
+                <span style="font-size: 1.5em;">🔒</span>
+                <p style="margin: 5px 0 0;">Secure UPI Payment</p>
+            </div>
+        </div>
+
+    </div>
+
+    <nav class="navbar">
+        <a href="index.html" class="nav-item">
+            🏠 Home
+        </a>
+        <a href="cart.html" class="nav-item">
+            🛒 Cart
+        </a>
+        <a href="profile.html" class="nav-item">
+            👤 Profile
+        </a>
+    </nav>
+</body>
+</html>

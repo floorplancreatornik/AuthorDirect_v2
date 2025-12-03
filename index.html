@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>**YOUR BRAND NAME** - Home</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; padding-bottom: 70px; background-color: #f4f4f4; color: #333; }
+        .header { padding: 20px; font-size: 1.5em; color: #a0522d; }
+        .intro { padding: 0 20px 20px 20px; text-align: center; }
+        .book-grid { display: flex; justify-content: space-around; flex-wrap: wrap; padding: 10px; }
+        .book-card { background-color: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin: 10px; padding: 15px; width: 150px; text-align: center; text-decoration: none; color: inherit; }
+        /* Image styles */
+        .book-card img { width: 100%; height: auto; border-radius: 4px; margin-bottom: 10px; }
+        .price-tag { display: inline-block; background-color: #a0522d; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.9em; margin-top: 5px; }
+        .support-box { background-color: #e6f3e6; color: #38761d; padding: 20px; margin: 20px; border-radius: 8px; text-align: center; }
+        /* Native-style bottom navigation bar */
+        .navbar { position: fixed; bottom: 0; width: 100%; background-color: white; box-shadow: 0 -2px 5px rgba(0,0,0,0.1); display: flex; justify-content: space-around; padding: 10px 0; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7em; color: #666; text-decoration: none; }
+        .nav-item.active { color: #a0522d; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <span style="font-size: 0.8em;">📖</span> **YOUR BRAND NAME**
+    </header>
+
+    <div class="intro">
+        <h2>Stories from the Soil</h2>
+        <p>Independent books, directly from the author to your hands.</p>
+    </div>
+
+    <div class="book-grid">
+        <a href="your-book-slug.html" class="book-card">
+            <img src="book_cover.jpg" alt="Your Main Book Title" style="width: 100%; height: auto; border-radius: 4px; margin-bottom: 10px;">
+            <p style="font-weight: bold; margin-bottom: 0;">**YOUR BOOK TITLE**</p>
+            <p style="font-size: 0.8em; color: #666; margin: 0;">**YOUR AUTHOR NAME**</p>
+            <span class="price-tag">**₹399**</span>
+        </a>
+
+        <a href="your-book-slug-2.html" class="book-card">
+            <img src="book_cover2.jpg" alt="Second Book Title" style="width: 100%; height: auto; border-radius: 4px; margin-bottom: 10px;">
+            <p style="font-weight: bold; margin-bottom: 0;">**SECOND BOOK TITLE**</p>
+            <p style="font-size: 0.8em; color: #666; margin: 0;">**YOUR AUTHOR NAME**</p>
+            <span class="price-tag" style="background-color: #555;">**₹299**</span>
+        </a>
+    </div>
+    
+    <div class="support-box">
+        <h4>Support Independent Writing</h4>
+        <p style="margin: 0;">Every purchase directly supports the author's journey.</p>
+    </div>
+
+    <nav class="navbar">
+        <a href="index.html" class="nav-item active">
+            🏠 Home
+        </a>
+        <a href="cart.html" class="nav-item">
+            🛒 Cart
+        </a>
+        <a href="profile.html" class="nav-item">
+            👤 Profile
+        </a>
+    </nav>
+</body>
+</html>
