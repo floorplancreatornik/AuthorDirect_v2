@@ -5,23 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - Finalize Order</title>
     <style>
-        body { font-family: sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; background-color: white; min-height: 100vh; }
-        h1 { color: #333; font-size: 1.5em; border-bottom: 2px solid #ccc; padding-bottom: 10px; margin-bottom: 20px; text-align: center; }
+        /* P6: Premium Book Theme CSS */
+        body { 
+            font-family: 'Georgia', serif; 
+            margin: 0; 
+            background-color: #FBF7F0; /* Premium Parchment */
+            /* A.3: Navigation Overlap Fix - Add padding equal to navigation bar height */
+            padding-bottom: 70px; 
+        }
+        .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background-color: #ffffff; 
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05); 
+            min-height: calc(100vh - 70px);
+        }
+        h1 { color: #60281E; /* Deep Mahogany Title */ font-size: 1.5em; border-bottom: 2px solid #ccc; padding-bottom: 10px; margin-bottom: 20px; text-align: center; }
         label { display: block; margin-top: 15px; font-weight: bold; color: #555; }
-        .input-style, textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .input-style, textarea { 
+            width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; 
+            font-family: 'Georgia', serif;
+        }
         textarea { resize: vertical; min-height: 80px; }
         
-        /* P6 Placeholder: Price Box Styling */
+        /* Price Display & Details */
         .price-details { margin-top: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; }
         .price-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 1em; }
-        .grand-total { font-size: 1.3em; font-weight: bold; color: #a0522d; border-top: 1px dashed #ccc; padding-top: 10px; margin-top: 10px; }
+        .grand-total { font-size: 1.3em; font-weight: bold; color: #60281E; border-top: 1px dashed #ccc; padding-top: 10px; margin-top: 10px; }
+        .grand-total span:last-child { color: #B8860B !important; } /* Muted Gold Accent for total */
         
-        #paymentButton { width: 100%; padding: 15px; background-color: #38761d; color: white; border: none; border-radius: 5px; font-size: 1.1em; cursor: pointer; margin-top: 25px; }
-        #paymentButton:hover { background-color: #2e5f17; }
-        .note-box { margin-top: 15px; padding: 10px; background-color: #fffae6; border: 1px solid #ffd700; border-radius: 5px; font-size: 0.9em; color: #333; text-align: center; }
+        /* Premium Buttons (C.6: Binding Color) */
+        #paymentButton { 
+            width: 100%; padding: 14px; 
+            background-color: #60281E; 
+            color: white; border: none; 
+            border-radius: 4px; font-size: 1.1em; 
+            cursor: pointer; margin-top: 25px; 
+            text-transform: uppercase;
+        }
+        #paymentButton:hover { background-color: #4A2016; }
+        
+        .note-box { margin-top: 15px; padding: 10px; background-color: #fff8e1; border: 1px solid #B8860B; border-radius: 5px; font-size: 0.9em; color: #333; text-align: center; }
+        
+        /* P3/A.2: Shipping Option Styles */
+        .options-section { border: 1px solid #ccc; border-radius: 5px; padding: 15px; margin-top: 20px; background-color: #f9f9f9; }
+        .options-section h3 { margin-top: 0; font-size: 1.1em; color: #60281E; }
+        .radio-option { margin-bottom: 10px; font-size: 0.95em; }
+        .radio-option label { font-weight: normal; color: #333; display: inline-block; }
 
-        /* Persistent Navigation Placeholder (P4) */
+        /* C.7: Persistent Navigation Bar Styling */
         .nav-bar {
             display: flex;
             justify-content: space-around;
@@ -29,15 +62,15 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background-color: white;
-            border-top: 1px solid #eee;
+            background-color: #ffffff;
+            border-top: 1px solid #ddd;
             padding: 10px 0;
             box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
             z-index: 1000;
         }
         .nav-bar a {
             text-decoration: none;
-            color: #333;
+            color: #60281E; /* Mahogany link color */
             font-size: 0.8em;
             text-align: center;
         }
@@ -45,12 +78,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>Finalize Order Details</h1>
+        <h1>Shipping & Payment</h1>
 
         <form id="paymentForm" action="YOUR_APPS_SCRIPT_URL_HERE" method="POST">
             
             <label for="customer_name_input">Customer Name *</label>
-            <input type="text" id="customer_name_input" class="input-style" placeholder="Your Name" required>
+            <input type="text" id="customer_name_input" class="input-style" placeholder="Your Full Name" required>
 
             <label for="phone_number_input">Phone Number *</label>
             <input type="tel" id="phone_number_input" class="input-style" placeholder="1234567890" required>
@@ -60,14 +93,25 @@
 
             <label for="pincode_input">Pincode *</label>
             <input type="number" id="pincode_input" class="input-style" placeholder="123456" required>
+            
+            <div class="options-section">
+                <h3>Select Delivery Method</h3>
+                <div class="radio-option">
+                    <input type="radio" id="shipping_standard" name="shipping_type" value="49.00" data-method="Standard Courier" checked>
+                    <label for="shipping_standard">Standard Shipping (3-5 Days) - ₹49.00</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="shipping_express" name="shipping_type" value="99.00" data-method="Express Shipping">
+                    <label for="shipping_express">Express Shipping (1-2 Days) - ₹99.00</label>
+                </div>
+            </div>
 
             <div class="price-details">
-                <h2 style="font-size: 1.2em; color: #a0522d;">Final Price Details</h2>
+                <h2 style="font-size: 1.2em; color: #60281E;">Final Price Details</h2>
                 
                 <div class="price-row"><span>Book Price</span><span id="book_price_display">₹0.00</span></div>
-                <div class="price-row"><span>Delivery Method</span><span id="shipping_display"></span></div>
-                <div class="price-row"><span>Support Fee</span><span id="support_fee_display"></span></div>
-
+                <div class="price-row"><span>Shipping & Handling</span><span id="shipping_display">₹0.00</span></div>
+                
                 <div class="price-row grand-total"><span>Grand Total</span><span id="grand_total_display">₹0.00</span></div>
             </div>
             
@@ -76,9 +120,9 @@
             <input type="hidden" name="Pincode" id="hidden_pincode">
             <input type="hidden" name="Shipping_Addri" id="hidden_shipping_address">
             <input type="hidden" name="Delivery_Methd" id="hidden_delivery_method">
-            <input type="hidden" name="Support_Amou" id="hidden_support_amount">
-            <input type="hidden" name="Final_Total" id="hidden_final_total">
+            <input type="hidden" name="Support_Amou" id="hidden_support_amount" value="0.00"> <input type="hidden" name="Final_Total" id="hidden_final_total">
             <input type="hidden" name="Book_Title" id="hidden_book_title">
+
             <button type="submit" id="paymentButton">Proceed to Payment</button>
             
             <div class="note-box">
@@ -95,92 +139,95 @@
 
     <script>
         // Set your UPI ID and the thanks page URL here
-        const YOUR_UPI_ID = "testmerchant@ybl"; // Placeholder for testing - REPLACE with your actual ID before going live
+        const YOUR_UPI_ID = "testmerchant@ybl"; // Placeholder for testing
         const THANK_YOU_URL = encodeURIComponent("https://eatornik.github.io/thankyou.html");
         
         let bookPrice = 0;
         let shippingFee = 0;
-        let supportFee = 0;
         let grandTotal = 0;
-        let deliveryMethod = "Standard Courier"; // Default value for sheet
-
+        let deliveryMethod = "Standard Courier";
+        
+        // Function to calculate and update the displayed total
+        function updatePrice() {
+            const selectedShippingRadio = document.querySelector('input[name="shipping_type"]:checked');
+            shippingFee = parseFloat(selectedShippingRadio.value);
+            deliveryMethod = selectedShippingRadio.getAttribute('data-method');
+            
+            grandTotal = bookPrice + shippingFee;
+            
+            document.getElementById('shipping_display').textContent = `+ ₹${shippingFee.toFixed(2)}`;
+            document.getElementById('grand_total_display').textContent = `₹${grandTotal.toFixed(2)}`;
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
-            // 1. Get the data from localStorage
+            // Get the data from localStorage
             const data = JSON.parse(localStorage.getItem('formData'));
             
-            if (!data) {
-                alert("Error: No book data found. Returning home.");
+            if (!data || !data.Book_Price) {
+                alert("Error: No book selected. Returning home.");
                 window.location.href = 'index.html';
                 return;
             }
 
-            // P3 Integration: Retrieve fees from localStorage (if set by index.html)
             bookPrice = parseFloat(data.Book_Price) || 0;
-            // Use values from data object; set defaults if missing (will be fixed by P3 in index.html)
-            shippingFee = parseFloat(data.Shipping_Fee) || 49.00; 
-            supportFee = parseFloat(data.Support_Fee) || 20.00; 
-            deliveryMethod = data.Delivery_Method || "Standard Courier";
-
-            // 2. Calculate Total
-            grandTotal = bookPrice + shippingFee + supportFee;
             
-            // 3. Display Prices (P3: Dynamic display of fees)
+            // Initial Price Display
             document.getElementById('book_price_display').textContent = `₹${bookPrice.toFixed(2)}`;
             
-            // Display Shipping and Support dynamically (P3 preparation)
-            document.getElementById('shipping_display').innerHTML = `<span>Shipping & Handling (${deliveryMethod})</span><span style="color: ${shippingFee > 0 ? '#38761d' : '#888'}">${shippingFee > 0 ? '+ ₹' : ''}${shippingFee.toFixed(2)}</span>`;
-            document.getElementById('support_fee_display').innerHTML = `<span>Support Fee</span><span style="color: ${supportFee > 0 ? '#38761d' : '#888'}">${supportFee > 0 ? '+ ₹' : '₹'}${supportFee.toFixed(2)}</span>`;
+            // P3/A.2: Attach event listeners to shipping radios
+            const shippingRadios = document.querySelectorAll('input[name="shipping_type"]');
+            shippingRadios.forEach(radio => radio.addEventListener('change', updatePrice));
             
-            document.getElementById('grand_total_display').textContent = `₹${grandTotal.toFixed(2)}`;
+            // Initial calculation
+            updatePrice();
             
-            // 4. Pre-fill Inputs (if data exists)
-            document.getElementById('customer_name_input').value = data.Customer_Name || '';
-            document.getElementById('phone_number_input').value = data.Phone_Number || '';
-            document.getElementById('shipping_address_input').value = data.Shipping_Address || '';
-            document.getElementById('pincode_input').value = data.Pincode || '';
-
             const form = document.getElementById('paymentForm');
 
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
 
-                // 5. Update data before submission
-                data.Customer_Name = document.getElementById('customer_name_input').value;
-                data.Phone_Number = document.getElementById('phone_number_input').value;
-                data.Shipping_Address = document.getElementById('shipping_address_input').value;
-                data.Pincode = document.getElementById('pincode_input').value;
-                data.Book_Title = data.Book_Title || "UNKNOWN"; 
+                // 1. Final check for total
+                updatePrice(); 
+
+                // 2. Gather ALL form data
+                const finalData = {
+                    Customer_Name: document.getElementById('customer_name_input').value,
+                    Phone_Number: document.getElementById('phone_number_input').value,
+                    Shipping_Address: document.getElementById('shipping_address_input').value,
+                    Pincode: document.getElementById('pincode_input').value,
+                    Book_Title: data.Book_Title || "UNKNOWN",
+                };
                 
-                // 6. Populate the HIDDEN FORM FIELDS (P1: CRITICAL FIX)
-                document.getElementById('hidden_customer_name').value = data.Customer_Name;
-                document.getElementById('hidden_phone_number').value = data.Phone_Number;
-                document.getElementById('hidden_pincode').value = data.Pincode;
-                document.getElementById('hidden_shipping_address').value = data.Shipping_Address;
+                // 3. Populate the HIDDEN FORM FIELDS (P1: CRITICAL FIX)
+                document.getElementById('hidden_customer_name').value = finalData.Customer_Name;
+                document.getElementById('hidden_phone_number').value = finalData.Phone_Number;
+                document.getElementById('hidden_pincode').value = finalData.Pincode;
+                document.getElementById('hidden_shipping_address').value = finalData.Shipping_Address;
                 
                 // Set final calculated values for the sheet
                 document.getElementById('hidden_delivery_method').value = deliveryMethod; 
-                document.getElementById('hidden_support_amount').value = supportFee.toFixed(2);
                 document.getElementById('hidden_final_total').value = grandTotal.toFixed(2);
-                document.getElementById('hidden_book_title').value = data.Book_Title;
+                document.getElementById('hidden_book_title').value = finalData.Book_Title;
+                // hidden_support_amount remains 0.00 as we removed the fee
 
-                // 7. Apps Script Submission (sends data to Google Sheet)
+                // 4. Apps Script Submission (sends data to Google Sheet)
                 const formData = new FormData(form);
                 fetch(form.action, { method: 'POST', body: formData })
                     .then(response => {
                         if (!response.ok) {
                             console.error('Apps Script submission failed.');
-                            alert("There was an issue saving your order data. Please check your connection and try again.");
+                            alert("There was an issue saving your order data. Please try again.");
                             return;
                         }
 
-                        // 8. UPI Deep Link Generation (Ultra-Compact Note: Book|Pincode|Phone|Name)
+                        // 5. UPI Deep Link Generation (Ultra-Compact Note: Book|Pincode|Phone|Name)
                         const encodedTotal = grandTotal.toFixed(2);
-                        const finalNote = `${data.Book_Title}|${data.Pincode}|${data.Phone_Number}|${data.Customer_Name}`;
+                        const finalNote = `${finalData.Book_Title}|${finalData.Pincode}|${finalData.Phone_Number}|${finalData.Customer_Name}`;
                         const encodedNote = encodeURIComponent(finalNote);
 
                         const upiUrl = `upi://pay?pa=${YOUR_UPI_ID}&pn=AuthorDirect&mc=5499&tid=${Date.now()}&tr=${Date.now()}&am=${encodedTotal}&cu=INR&url=${THANK_YOU_URL}&tn=${encodedNote}`;
                         
-                        // 9. Redirect to UPI App
+                        // 6. Redirect to UPI App
                         window.location.href = upiUrl;
 
                     })

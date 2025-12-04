@@ -5,11 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Store</title>
     <style>
-        body { font-family: sans-serif; margin: 0; padding-bottom: 70px; background-color: #f4f4f4; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; background-color: white; }
-        h1 { color: #333; text-align: center; margin-bottom: 20px; }
+        /* P6: Premium Book Theme CSS */
+        body { 
+            font-family: 'Georgia', serif; 
+            margin: 0; 
+            background-color: #FBF7F0; /* Premium Parchment */
+            /* A.3: Navigation Overlap Fix - Add padding equal to navigation bar height */
+            padding-bottom: 70px; 
+        }
+        .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background-color: #ffffff; 
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05); /* Soft, premium lift effect */
+            min-height: calc(100vh - 70px); /* Ensures full height above nav bar */
+        }
+        h1 { color: #60281E; /* Deep Mahogany Title */ text-align: center; margin-bottom: 25px; }
         
-        /* P6: Aesthetic Polish for Price Boxes/Cards */
+        /* Book Card Styles */
         .book-card {
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -20,29 +34,35 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         .book-card img { width: 100%; max-width: 150px; height: auto; margin-bottom: 10px; }
-        .book-card h3 { margin: 10px 0 5px 0; font-size: 1.1em; color: #333; }
-        .book-card p { margin: 0 0 10px 0; font-size: 0.9em; color: #777; }
+        .book-card h3 { margin: 10px 0 5px 0; font-size: 1.2em; color: #2B2D42; }
+        .book-card p { margin: 0 0 10px 0; font-size: 1em; color: #777; }
         .book-card .price { 
-            font-size: 1.4em; 
+            font-size: 1.5em; 
             font-weight: bold; 
-            color: #a0522d; /* Uniform Price Color */
+            color: #B8860B; /* Muted Gold Accent (P6) */
             display: block; 
             margin-bottom: 15px;
         }
 
-        /* Input Styles */
-        .input-style { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        .buy-button { width: 100%; padding: 12px; background-color: #38761d; color: white; border: none; border-radius: 5px; font-size: 1em; cursor: pointer; margin-top: 15px; }
-        .buy-button:hover { background-color: #2e5f17; }
+        /* Premium Buttons (C.6: Binding Color) */
+        .buy-button { 
+            width: 100%; 
+            padding: 14px; 
+            background-color: #60281E; /* Deep Mahogany/Maroon */
+            color: white; 
+            border: none; 
+            border-radius: 4px; 
+            font-size: 1.1em; 
+            cursor: pointer; 
+            margin-top: 15px; 
+            text-transform: uppercase;
+            transition: background-color 0.2s;
+        }
+        .buy-button:hover { 
+            background-color: #4A2016; 
+        }
         
-        /* P3: Fee Selection Styles */
-        .options-section { border: 1px solid #ccc; border-radius: 5px; padding: 15px; margin-top: 20px; background-color: #f9f9f9; }
-        .options-section h3 { margin-top: 0; font-size: 1.1em; color: #a0522d; }
-        .radio-option { margin-bottom: 10px; font-size: 0.95em; }
-        .radio-option label { font-weight: normal; color: #333; display: inline-block; }
-        .checkbox-option { margin-top: 10px; font-size: 0.95em; }
-
-        /* P4: Persistent Navigation Bar */
+        /* C.7: Persistent Navigation Bar Styling */
         .nav-bar {
             display: flex;
             justify-content: space-around;
@@ -50,15 +70,15 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background-color: white;
-            border-top: 1px solid #eee;
+            background-color: #ffffff;
+            border-top: 1px solid #ddd;
             padding: 10px 0;
             box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
             z-index: 1000;
         }
         .nav-bar a {
             text-decoration: none;
-            color: #333;
+            color: #60281E; /* Mahogany link color */
             font-size: 0.8em;
             text-align: center;
         }
@@ -66,38 +86,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to the Book Store</h1>
+        <h1>Welcome to the Author's Collection</h1>
 
-        <form id="bookForm">
-            <label for="customer_name">Your Name *</label>
-            <input type="text" id="customer_name" class="input-style" placeholder="Enter Your Full Name" required>
-            
-            <div class="options-section">
-                <h3>Choose Delivery Speed</h3>
-                <div class="radio-option">
-                    <input type="radio" id="shipping_standard" name="shipping_type" value="49.00" data-method="Standard Courier" checked>
-                    <label for="shipping_standard">Standard Shipping (3-5 Days) - ₹49.00</label>
-                </div>
-                <div class="radio-option">
-                    <input type="radio" id="shipping_express" name="shipping_type" value="99.00" data-method="Express Shipping">
-                    <label for="shipping_express">Express Shipping (1-2 Days) - ₹99.00</label>
-                </div>
-            </div>
-
-            <div class="options-section">
-                <h3>Author Support Fee</h3>
-                <div class="checkbox-option">
-                    <input type="checkbox" id="support_fee" value="20.00" checked>
-                    <label for="support_fee">Include Author Support Fee (+ ₹20.00)</label>
-                </div>
-            </div>
-
+        <form id="bookForm" style="display:none;">
             <input type="hidden" id="book_title" value="">
             <input type="hidden" id="book_price" value="">
-            <input type="hidden" id="shipping_fee" value="">
-            <input type="hidden" id="support_fee_value" value="">
-            <input type="hidden" id="delivery_method" value="">
-            
         </form>
 
         <div class="book-card" data-title="B1" data-price="399.00">
@@ -105,7 +98,7 @@
             <h3>**YOUR BOOK TITLE**</h3>
             <p>**YOUR AUTHOR NAME**</p>
             <span class="price">₹399.00</span>
-            <button class="buy-button" onclick="selectBook(this)">Buy Now</button>
+            <button class="buy-button" onclick="selectBook(this)">Read & Buy</button>
         </div>
 
         <div class="book-card" data-title="B2" data-price="299.00">
@@ -113,7 +106,7 @@
             <h3>**SECOND BOOK TITLE**</h3>
             <p>**YOUR AUTHOR NAME**</p>
             <span class="price">₹299.00</span>
-            <button class="buy-button" onclick="selectBook(this)">Buy Now</button>
+            <button class="buy-button" onclick="selectBook(this)">Read & Buy</button>
         </div>
     </div>
 
@@ -128,42 +121,17 @@
             const card = button.closest('.book-card');
             const bookTitle = card.getAttribute('data-title');
             const bookPrice = card.getAttribute('data-price');
-            const customerName = document.getElementById('customer_name').value;
 
-            if (!customerName) {
-                alert("Please enter your name before proceeding.");
-                document.getElementById('customer_name').focus();
-                return;
-            }
-
-            // P3 Logic: Determine selected fees
-            
-            // 1. Get Shipping Selection
-            const selectedShippingRadio = document.querySelector('input[name="shipping_type"]:checked');
-            const shippingFee = parseFloat(selectedShippingRadio.value);
-            const deliveryMethod = selectedShippingRadio.getAttribute('data-method');
-
-            // 2. Get Support Fee Selection
-            const supportCheckbox = document.getElementById('support_fee');
-            const supportFee = supportCheckbox.checked ? parseFloat(supportCheckbox.value) : 0.00;
-
-            // 3. Calculate Grand Total
-            const grandTotal = parseFloat(bookPrice) + shippingFee + supportFee;
-
-            // 4. Save ALL data (including new fees) to localStorage
+            // Save only the essential book data for checkout.html
             const formData = {
-                Customer_Name: customerName,
                 Book_Title: bookTitle,
                 Book_Price: bookPrice,
-                Shipping_Fee: shippingFee.toFixed(2), // Save fees for checkout.html to use
-                Delivery_Method: deliveryMethod, 
-                Support_Fee: supportFee.toFixed(2), // Save support fee
-                Total_Amount: grandTotal.toFixed(2)
+                // Shipping and Name are handled on the checkout page now
             };
             
             localStorage.setItem('formData', JSON.stringify(formData));
 
-            // 5. Redirect to checkout page
+            // Redirect to checkout page
             window.location.href = 'checkout.html';
         }
     </script>
