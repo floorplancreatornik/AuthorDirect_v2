@@ -11,14 +11,17 @@
         label { display: block; margin-top: 15px; font-weight: bold; color: #555; }
         .input-style, textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
         textarea { resize: vertical; min-height: 80px; }
+        
+        /* P6 Placeholder: Price Box Styling */
         .price-details { margin-top: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; background-color: #f9f9f9; }
         .price-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 1em; }
         .grand-total { font-size: 1.3em; font-weight: bold; color: #a0522d; border-top: 1px dashed #ccc; padding-top: 10px; margin-top: 10px; }
+        
         #paymentButton { width: 100%; padding: 15px; background-color: #38761d; color: white; border: none; border-radius: 5px; font-size: 1.1em; cursor: pointer; margin-top: 25px; }
         #paymentButton:hover { background-color: #2e5f17; }
         .note-box { margin-top: 15px; padding: 10px; background-color: #fffae6; border: 1px solid #ffd700; border-radius: 5px; font-size: 0.9em; color: #333; text-align: center; }
 
-        /* Persistent Navigation Bar Placeholder (P4) */
+        /* Persistent Navigation Placeholder (P4) */
         .nav-bar {
             display: flex;
             justify-content: space-around;
@@ -47,31 +50,31 @@
         <form id="paymentForm" action="YOUR_APPS_SCRIPT_URL_HERE" method="POST">
             
             <label for="customer_name_input">Customer Name *</label>
-            <input type="text" name="Customer_Name" id="customer_name_input" class="input-style" placeholder="Your Name" required>
+            <input type="text" id="customer_name_input" class="input-style" placeholder="Your Name" required>
 
             <label for="phone_number_input">Phone Number *</label>
-            <input type="tel" name="Phone_Number" id="phone_number_input" class="input-style" placeholder="1234567890" required>
+            <input type="tel" id="phone_number_input" class="input-style" placeholder="1234567890" required>
 
             <label for="shipping_address_input">Shipping Address *</label>
-            <textarea name="Shipping_Address" id="shipping_address_input" class="input-style" placeholder="House/Flat No., Street, City, State" required></textarea>
+            <textarea id="shipping_address_input" class="input-style" placeholder="House/Flat No., Street, City, State" required></textarea>
 
             <label for="pincode_input">Pincode *</label>
-            <input type="number" name="Pincode" id="pincode_input" class="input-style" placeholder="123456" required>
+            <input type="number" id="pincode_input" class="input-style" placeholder="123456" required>
 
             <div class="price-details">
                 <h2 style="font-size: 1.2em; color: #a0522d;">Final Price Details</h2>
                 
                 <div class="price-row"><span>Book Price</span><span id="book_price_display">₹0.00</span></div>
-                <div class="price-row"><span>Shipping & Handling</span><span id="shipping_display">+ ₹49.00</span></div>
-                <div class="price-row"><span>Support Fee (Optional)</span><span id="support_fee_display">+ ₹20.00</span></div>
+                <div class="price-row"><span>Delivery Method</span><span id="shipping_display"></span></div>
+                <div class="price-row"><span>Support Fee</span><span id="support_fee_display"></span></div>
 
                 <div class="price-row grand-total"><span>Grand Total</span><span id="grand_total_display">₹0.00</span></div>
             </div>
             
             <input type="hidden" name="Customer_Naml" id="hidden_customer_name">
-            <input type="hidden" name="Phone_Number" id="hidden_phone_number_sheet">
-            <input type="hidden" name="Pincode" id="hidden_pincode_sheet">
-            <input type="hidden" name="Shipping_Addri" id="hidden_shipping_address_sheet">
+            <input type="hidden" name="Phone_Number" id="hidden_phone_number">
+            <input type="hidden" name="Pincode" id="hidden_pincode">
+            <input type="hidden" name="Shipping_Addri" id="hidden_shipping_address">
             <input type="hidden" name="Delivery_Methd" id="hidden_delivery_method">
             <input type="hidden" name="Support_Amou" id="hidden_support_amount">
             <input type="hidden" name="Final_Total" id="hidden_final_total">
@@ -92,16 +95,15 @@
 
     <script>
         // Set your UPI ID and the thanks page URL here
-        const YOUR_UPI_ID = "testmerchant@ybl"; // Placeholder for testing
+        const YOUR_UPI_ID = "testmerchant@ybl"; // Placeholder for testing - REPLACE with your actual ID before going live
         const THANK_YOU_URL = encodeURIComponent("https://eatornik.github.io/thankyou.html");
         
-        // --- FIXED COSTS (P3 will make these optional) ---
-        const SHIPPING_FEE = 49.00;
-        const SUPPORT_FEE = 20.00; 
-
         let bookPrice = 0;
+        let shippingFee = 0;
+        let supportFee = 0;
         let grandTotal = 0;
-        
+        let deliveryMethod = "Standard Courier"; // Default value for sheet
+
         document.addEventListener('DOMContentLoaded', function() {
             // 1. Get the data from localStorage
             const data = JSON.parse(localStorage.getItem('formData'));
@@ -112,12 +114,23 @@
                 return;
             }
 
-            // 2. Calculate Total
+            // P3 Integration: Retrieve fees from localStorage (if set by index.html)
             bookPrice = parseFloat(data.Book_Price) || 0;
-            grandTotal = bookPrice + SHIPPING_FEE + SUPPORT_FEE;
+            // Use values from data object; set defaults if missing (will be fixed by P3 in index.html)
+            shippingFee = parseFloat(data.Shipping_Fee) || 49.00; 
+            supportFee = parseFloat(data.Support_Fee) || 20.00; 
+            deliveryMethod = data.Delivery_Method || "Standard Courier";
+
+            // 2. Calculate Total
+            grandTotal = bookPrice + shippingFee + supportFee;
             
-            // 3. Display Prices
+            // 3. Display Prices (P3: Dynamic display of fees)
             document.getElementById('book_price_display').textContent = `₹${bookPrice.toFixed(2)}`;
+            
+            // Display Shipping and Support dynamically (P3 preparation)
+            document.getElementById('shipping_display').innerHTML = `<span>Shipping & Handling (${deliveryMethod})</span><span style="color: ${shippingFee > 0 ? '#38761d' : '#888'}">${shippingFee > 0 ? '+ ₹' : ''}${shippingFee.toFixed(2)}</span>`;
+            document.getElementById('support_fee_display').innerHTML = `<span>Support Fee</span><span style="color: ${supportFee > 0 ? '#38761d' : '#888'}">${supportFee > 0 ? '+ ₹' : '₹'}${supportFee.toFixed(2)}</span>`;
+            
             document.getElementById('grand_total_display').textContent = `₹${grandTotal.toFixed(2)}`;
             
             // 4. Pre-fill Inputs (if data exists)
@@ -131,23 +144,22 @@
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
 
-                // 5. Update data before submission (in case user edited fields on checkout page)
+                // 5. Update data before submission
                 data.Customer_Name = document.getElementById('customer_name_input').value;
                 data.Phone_Number = document.getElementById('phone_number_input').value;
                 data.Shipping_Address = document.getElementById('shipping_address_input').value;
                 data.Pincode = document.getElementById('pincode_input').value;
-                data.Book_Title = data.Book_Title || "UNKNOWN"; // Ensure book title is set
+                data.Book_Title = data.Book_Title || "UNKNOWN"; 
                 
                 // 6. Populate the HIDDEN FORM FIELDS (P1: CRITICAL FIX)
-                // This block aligns the data perfectly with your Google Sheet columns
                 document.getElementById('hidden_customer_name').value = data.Customer_Name;
-                document.getElementById('hidden_phone_number_sheet').value = data.Phone_Number;
-                document.getElementById('hidden_pincode_sheet').value = data.Pincode;
-                document.getElementById('hidden_shipping_address_sheet').value = data.Shipping_Address;
+                document.getElementById('hidden_phone_number').value = data.Phone_Number;
+                document.getElementById('hidden_pincode').value = data.Pincode;
+                document.getElementById('hidden_shipping_address').value = data.Shipping_Address;
                 
-                // Set fixed/calculated values for the sheet
-                document.getElementById('hidden_delivery_method').value = "Standard Courier"; 
-                document.getElementById('hidden_support_amount').value = SUPPORT_FEE.toFixed(2);
+                // Set final calculated values for the sheet
+                document.getElementById('hidden_delivery_method').value = deliveryMethod; 
+                document.getElementById('hidden_support_amount').value = supportFee.toFixed(2);
                 document.getElementById('hidden_final_total').value = grandTotal.toFixed(2);
                 document.getElementById('hidden_book_title').value = data.Book_Title;
 
@@ -155,16 +167,14 @@
                 const formData = new FormData(form);
                 fetch(form.action, { method: 'POST', body: formData })
                     .then(response => {
-                        // Check for successful response before redirecting to UPI
                         if (!response.ok) {
                             console.error('Apps Script submission failed.');
-                            alert("There was an issue saving your order data. Please try again.");
+                            alert("There was an issue saving your order data. Please check your connection and try again.");
                             return;
                         }
 
-                        // 8. UPI Deep Link Generation (Uses the ultra-compact note: Book|Pincode|Phone|Name)
+                        // 8. UPI Deep Link Generation (Ultra-Compact Note: Book|Pincode|Phone|Name)
                         const encodedTotal = grandTotal.toFixed(2);
-                        
                         const finalNote = `${data.Book_Title}|${data.Pincode}|${data.Phone_Number}|${data.Customer_Name}`;
                         const encodedNote = encodeURIComponent(finalNote);
 
